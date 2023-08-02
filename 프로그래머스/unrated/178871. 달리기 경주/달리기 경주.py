@@ -1,19 +1,10 @@
 def solution(players, callings):
-    answer = []
-    dictPlayers = {}
-    dictRanks = {}
+    player_ranks = {player: idx for idx, player in enumerate(players)}
     
-    for idx, player in enumerate(players):
-        rank = idx + 1
+    for call in callings:
+        current = player_ranks[call]
         
-        dictPlayers[player] = rank;
-        dictRanks[rank] = player;
-    for calling in callings:
-        overtake = dictRanks[dictPlayers[calling] - 1]
-        
-        dictRanks[dictPlayers[calling]] = overtake;
-        dictRanks[dictPlayers[overtake]] = calling;
-        dictPlayers[calling] -= 1;
-        dictPlayers[overtake] += 1;
-    answer = list(dictRanks.values());
-    return answer
+        player_ranks[call] -= 1;
+        player_ranks[players[current - 1]] += 1;
+        players[current - 1], players[current] = players[current], players[current - 1];
+    return players;
