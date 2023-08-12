@@ -13,8 +13,4 @@ def solution(order):
                 idx += 1;
                 sub.pop();
         else: sub.append(i + 1);
-    # while sub: main.append(sub.pop());
-    # for idx, val in enumerate(main):
-    #     if (val == order[idx]): answer += 1;
-    #     else: break;
     return answer;
