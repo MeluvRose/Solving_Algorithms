@@ -1,25 +1,18 @@
 def solution(number, k):
     answer = ''
-    # arrNum = list(number);
     stack = []
     
-    # for _ in range(k):
-    #     for idx in range(len(arrNum) - 1):
-    #         if (arrNum[idx] < arrNum[idx + 1]):
-    #             arrNum.pop(idx);
-    #             break;
-    # answer = answer.join(arrNum);
-    for n in number:
-        if not stack:
-            stack.append(n);
-            continue;
-        while stack and k > 0:
-            if stack[-1] < n:
-                stack.pop();
-                k -= 1;
-            else: break;
-        stack.append(n);
-        if len(stack) == len(number) - k:
-            break;
-    answer = answer.join(stack);
+    for i in range(len(number)):
+        #print('depth : ', i)
+        #print('k : ', k)
+        #print('stack : ', stack)
+        while (stack and stack[-1] < number[i] 
+               and k > 0):
+            k -= 1
+            stack.pop()
+        stack.append(number[i])
+    # 제거 횟수를 다 사용하지 않았을때 남은 횟수만큼 리스트 뒷부분을 잘라 준다
+    if k != 0:
+        stack = stack[:-k]
+    answer = ''.join(stack);
     return answer
