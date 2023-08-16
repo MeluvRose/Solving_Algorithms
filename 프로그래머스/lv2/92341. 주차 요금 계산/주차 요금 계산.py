@@ -12,6 +12,7 @@ def getFee(time, fees):
     # 누적 주차 시간이 기본 시간 이하
     if time <= fees[0]: return fees[1];
     extra = ((time - fees[0]) / fees[2]);
+    # 올림
     if extra % 1: extra = (extra // 1) + 1;
     return int(fees[1] + extra * fees[3]);
 
@@ -33,8 +34,8 @@ def solution(fees, records):
             times[record[1]] += getTime(cars[record[1]], record[0]);
             cars[record[1]] = '';
     for car in cars.keys():
-        if cars[car] != '':
-            times[car] += getTime(cars[car]);
+        if cars[car] != '': times[car] += getTime(cars[car]);
+    # 차량 번호가 작은 순으로 정렬
     sortedKeys = sorted(times.keys())
     for key in sortedKeys:
         fee = getFee(times[key], fees);
