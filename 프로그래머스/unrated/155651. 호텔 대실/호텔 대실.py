@@ -6,9 +6,42 @@ def getTime(time):
     return hour * 60 + minute;
 
 def solution(book_time):
-    # answer = 0
-    answer = 1
+    answer = 0
+    minutes = [0 for _ in range(60 * 24 + 10)]
     
+    for book in book_time:
+        start = getTime(book[0])
+        end = getTime(book[1])
+        minutes[start] += 1;
+        minutes[end + 10] -= 1;
+    num = 0
+    for i in range(len(minutes)):
+        num += minutes[i];
+        minutes[i] = num;
+    answer = max(minutes);
+    return answer
+
+"""
+1. deque(queue)를 이용한 문제 접근(테케 O, 정답 X)
+    bookQueue = deque()
+    
+    for start, end in book_time:
+        item = []
+        item.append(getTime(start));
+        item.append(getTime(end));
+        bookQueue.append(item);
+    bookQueue = deque(
+        sorted(bookQueue, key=lambda x:x[1]));
+    while(answer < len(bookQueue)):
+        if bookQueue[0][1] <= bookQueue[answer][0]:
+            bookQueue.popleft();
+            bookQueue = deque(
+                sorted(bookQueue, key=lambda x:x[1]));
+            continue;
+        answer += 1;
+        
+2. 제출 코드 (heap)
+    answer = 1
     bookTime = []
     
     # 문자형 -> 숫자형으로 변경
@@ -41,24 +74,20 @@ def solution(book_time):
         # 새로 들어온 객실의 재입실 가능 시각을 추가 할당
         heappush(heap,e + 10)
         # print(heap);
-    return answer
 
-"""
-1. deque(queue)를 이용한 문제 접근(테케 O, 정답 X)
-    bookQueue = deque()
+2-1. list 활용
+    bookTime = [[getTime(i[0]), getTime(i[1]) + 10] for i in book_time]
+    rooms = []
     
-    for start, end in book_time:
-        item = []
-        item.append(getTime(start));
-        item.append(getTime(end));
-        bookQueue.append(item);
-    bookQueue = deque(
-        sorted(bookQueue, key=lambda x:x[1]));
-    while(answer < len(bookQueue)):
-        if bookQueue[0][1] <= bookQueue[answer][0]:
-            bookQueue.popleft();
-            bookQueue = deque(
-                sorted(bookQueue, key=lambda x:x[1]));
+    bookTime.sort();
+    for book im bookTime:
+        if not rooms:
+            rooms.append(book)
             continue;
-        answer += 1;
+        for idx, room im enumerate(rooms):
+            if book[0] >= room[1]:
+                rooms[index] = room + book;
+                break
+        else: rooms.append(book);
+    return len(rooms);
 """
