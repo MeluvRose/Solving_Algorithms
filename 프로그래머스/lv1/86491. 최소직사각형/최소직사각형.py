@@ -9,7 +9,6 @@ def solution(sizes):
             tmp.append([size[1], size[0]])
             continue;
         tmp.append(size);
-    # print(tmp);
     for w, h in tmp:
         maxW = w if maxW < w else maxW;
         maxH = h if maxH < h else maxH;
