@@ -33,3 +33,58 @@ def solution(k, dungeons):
             answer = cnt;
             break;
     return answer
+
+"""
+(resursion)
+
+solution = lambda k, d: max([solution(k - u, d[:i] + d[i+1:]) + 1 for i, (m, u) in enumerate(d) if k >= m] or [0])
+"""
+
+"""
+(dfs, (backtracking))
+
+answer = 0
+N = 0
+visited = []
+
+
+def dfs(k, cnt, dungeons):
+    global answer
+    if cnt > answer:
+        answer = cnt
+
+    for j in range(N):
+        if k >= dungeons[j][0] and not visited[j]:
+            visited[j] = 1
+            dfs(k - dungeons[j][1], cnt + 1, dungeons)
+            visited[j] = 0
+
+
+def solution(k, dungeons):
+    global N, visited
+    N = len(dungeons)
+    visited = [0] * N
+    dfs(k, 0, dungeons)
+    return answer
+"""
+
+"""
+(permutation)
+
+from itertools import permutations
+# 8! = 40320. 무지성 순열 가즈아
+def solution(k, dungeons):
+    ans = 0
+    pList = list(permutations([i for i in range(len(dungeons))], len(dungeons)))
+    for p in pList:
+        curK = k # 초기 피로도
+        cnt = 0. # 탐험한 던전 수
+        for i in range(len(p)): # 무지성 탐색
+            if curK < dungeons[p[i]][0] or curK < dungeons[p[i]][1]: # 해당 던전을 탐사할 수 없을 때 종료
+                break
+            # "최소 필요 피로도"는 항상 "소모 피로도"보다 크거나 같습니다. -> 최소 피로도만 넘으면 항상 탐사 가능
+            curK -= dungeons[p[i]][1] # 소모 피로도만큼 감소
+            cnt += 1 # 던전 탐험
+        ans = max(ans, cnt) # 최대값 갱신
+    return ans
+"""
