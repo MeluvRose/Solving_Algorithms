@@ -1,16 +1,50 @@
-from collections import deque
+def solution(picks, minerals):
+    
+    def dfs(picks, minerals, tired):
+        nonlocal answer
 
+        # print("before: ", picks);
+        if sum(picks) == 0 or not minerals:
+            answer = min(tired, answer)
+            return
+
+        for i in range(len(picks)):
+            exp = 0
+            if picks[i] >= 1:
+                picks[i] -= 1
+                mined = minerals[:5]
+                if i == 0:
+                    exp += len(mined)
+                elif i == 1:
+                    for mineral in mined:
+                        if mineral == "diamond":
+                            exp += 5
+                        else:
+                            exp += 1
+                elif i == 2:
+                    for mineral in mined:
+                        if mineral == "diamond":
+                            exp += 25
+                        elif mineral == "iron":
+                            exp += 5
+                        else:
+                            exp += 1
+                dfs(picks, minerals[5:], tired + exp)
+                picks[i] += 1
+                # print("after: ", picks);
+    answer = 25 * 55
+    dfs(picks,minerals,0)
+    return answer
+
+
+"""
+(구현)
 def solution(picks, minerals):
     answer = 0
-    cntPicks = 0
     cntPicks = sum(picks)
     blocks = [[0, 0, 0] for x in range(10)]
     
     # 캘 수 있는 광물의 개수
-    # for p in picks:
-    #     cntPicks += p;
-    # if len(minerals) > cntPicks * 5:
-    #     minerals = minerals[:(cntPicks * 5)];
     minerals = minerals[:(cntPicks * 5)];
     
     # 광물 조사(분할)
@@ -40,26 +74,7 @@ def solution(picks, minerals):
             elif p == 2 and picks[p] > 0:
                 picks[p] -= 1
                 answer += ((25 * d) + (5 * i) + s)
-                break;
+                break; 
     return answer
 
-"""
-
-#     minerals = deque(minerals[:(5 * cntPicks)]);
-#     for idx in range(len(picks)):
-#         if picks[idx] > 0:
-#             pick = pow(5, (2 - idx))
-#             cnt = 0
-#             while (cnt < 5 and len(minerals) > 0):
-#                 cost = 0;
-#                 m = minerals.popleft();
-
-#                 # print(pick);
-#                 if m == "diamond": cost = 25 // pick;
-#                 elif m == "iron": cost = 5 // pick;
-#                 # print(answer, cost);
-#                 if cost <= 1: answer += 1;
-#                 else: answer += cost;
-#                 cnt += 1;
-#             picks[idx] -= 1;
 """
