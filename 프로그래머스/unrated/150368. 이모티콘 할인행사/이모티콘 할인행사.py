@@ -1,3 +1,41 @@
+def combinationCase(prev):
+    cases = []
+    
+    # print(prev);
+    for li in prev:
+        for n in [40, 30, 20, 10]:
+            cases.append(li + [n]);
+    return cases;
+
+def solution(users, emoticons):
+    answer = []
+    cases = [[]]
+    
+    # 이모티콘 별 할인율 경우의 수 조합
+    for _ in range(len(emoticons)):
+        cases = combinationCase(cases);
+    """
+    percents = [10, 20, 30, 40]
+    cases = product(percents, repeat=len(emoticons));
+    """
+    
+    # 완전 탐색
+    for case in cases:
+        result = [0, 0]
+        for percent, cost in users:
+            price = 0
+            for i in range(len(emoticons)):
+                if case[i] >= percent:
+                    price += (emoticons[i] // 100
+                              * (100 - case[i]));
+            if price >= cost: result[0] += 1;
+            else: result[1] += price;
+        answer.append(result);
+    answer.sort(key=lambda x:(-x[0], -x[1]));
+    return answer[0];
+
+"""
+(javaToPython)
 lenUsers = None;
 lenEmoticons = None;
 discounts = [40, 30, 20, 10];
@@ -45,3 +83,4 @@ def solution(users, emoticons):
     # print(answer);
     answer.sort(key=lambda x:(-x[0],-x[1]));
     return answer[0];
+"""
