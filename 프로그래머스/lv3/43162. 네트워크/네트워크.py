@@ -1,19 +1,26 @@
-def dfs(n, computers, nodes):
-    computer = computers[nodes[-1]];
-    visit = 0
-    
-    if n == len(nodes):
-        return nodes;
-    for idx in range(len(computer)):
-        if (computer[idx] == 1
-           and idx not in nodes):
-            nodes.append(idx);
-            return dfs(n, computers, nodes);
-        else: visit += 1;
-    if visit == len(computer):
-        return nodes;
-        
+from collections import deque
 
+def solution(n, computers):
+    answer = 0
+    queue = deque()
+    visited = [False] * n
+    
+    for i in range(n):
+        if visited[i] == True:
+            continue;
+        visited[i] = True;
+        queue.append(i);
+        answer += 1;
+        while queue:
+            i = queue.popleft();
+            for j in range(n):
+                if (computers[i][j] == 1
+                   and visited[j] == False):
+                    visited[j] = True;
+                    queue.append(j);
+    return answer
+
+"""
 def solution(n, computers):
     answer = 0
     visited = [False] * n
@@ -31,18 +38,4 @@ def solution(n, computers):
             answer += 1;
             dfs(i, n, visited);
     return answer;
-    
-    """
-    networks = []
-    
-    for i in range(len(computers)):
-        net = dfs(n, computers, [i]);
-        # print("net :", net);
-        net.sort();
-        if len(net) == n: return 1;
-        if net not in networks:
-            networks.append(net);
-    # print("networks :", networks);
-    answer = len(networks);
-    """
-    return answer
+"""
