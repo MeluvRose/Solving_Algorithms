@@ -1,3 +1,10 @@
+def solution(numbers, target):
+    if not numbers:
+        if target == 0: return 1;
+        return 0;
+    return (solution(numbers[1:], target - numbers[0]) 
+            + solution(numbers[1:], target + numbers[0]));
+"""
 answer = 0
 
 def bfs(numbers, depth, value, target):
@@ -18,3 +25,4 @@ def solution(numbers, target):
     
     bfs(numbers, 0, 0, target);
     return answer
+"""
