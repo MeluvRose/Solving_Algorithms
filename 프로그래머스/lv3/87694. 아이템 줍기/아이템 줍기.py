@@ -100,3 +100,100 @@ def solution(rectangle, characterX, characterY, itemX, itemY):
                 visited[nx][ny] = visited[x][y] + 1
     
     return answer
+
+"""
+(example 2)
+from collections import deque
+answer = 10000
+def solution(rectangle, characterX, characterY, itemX, itemY):
+    # 여집합으로 모두 면적을 구한 뒤, 테두리만 추출하기.
+    # 다른 공식으로 풀 수 있지만, 이 방법은 좌표계에서 최대 크기가 50x50 이다.
+    # 그러니 무지성으로 완탐 급으로 돌린다.
+    # 하지만 너무 가까운 테두리는 인식이 안될 수도 있다.
+    # 그러므로 사이즈는 2배로 늘린다.
+
+    # 각 방향 좌표를 구하기.
+    left, bottom, right, top = [100, 100, 0, 0]
+    for v in rectangle:
+        left = min(left, v[0])
+        bottom = min(bottom, v[1])
+        right = max(right, v[2])
+        top = max(top, v[3])
+    top *= 2
+    right *= 2
+    left *= 2
+    bottom *= 2
+
+    # matrix에 여집합으로 매핑하기.
+    matrix = [[0 for row in range((right + 2))] for col in range((top + 2))]
+    for x1, y1, x2, y2 in rectangle:
+        for col in range(y1 * 2, 2 * y2 + 1):
+            for row in range(x1 * 2, 2 * x2 + 1):
+                matrix[top - col + 1][row] |= 1
+
+    # 테두리만 2로 변경하기.
+    matrix = BFS(matrix, top + 2, right + 2)
+
+    # 테두리만 따라가서 길이 추적하기.
+    visited = [[False for row in range(right + 2)] for col in range(top + 2)]
+    start = [characterX * 2, top - characterY * 2 + 1]
+    goal = [itemX * 2, top - itemY * 2 + 1]
+    visited[start[1]][start[0]] = True
+    DFS(matrix, start, goal, visited, top + 1, right + 1, 0)
+
+    return answer // 2
+
+
+def BFS(matrix, N, M):
+    Queue = deque()
+
+    # mapping to start_x, start_y
+    Queue.append([0, 0])
+    visited = [[False for row in range(M)] for col in range(N)]
+
+    # 8 arrow
+    # format -> right, down, left, up, rightup, rightdown, leftdown, leftup
+    dx = [1, 0, -1, 0, 1, 1, -1, -1]
+    dy = [0, 1, 0, -1, -1, 1, 1, -1]
+    visited[0][0] = True
+
+    while Queue:
+        x, y = Queue.popleft()
+        for i in range(8):
+            X = x + dx[i]
+            Y = y + dy[i]
+            if 0 <= X < M and 0 <= Y < N:
+                if visited[Y][X]:
+                    continue
+                if matrix[Y][X] == 0:
+                    Queue.append([X, Y])
+                    visited[Y][X] = True
+                elif matrix[Y][X] == 1:
+                    matrix[Y][X] = 2
+                    visited[Y][X] = True
+
+    return matrix
+
+
+def DFS(matrix, start, goal, visited, N, M, cnt):
+    if start == goal:
+        global answer
+        answer = min(cnt, answer)
+        return
+    # 4 arrow
+    # format -> right, down, left, up
+    dx = [1, 0, -1, 0]
+    dy = [0, 1, 0, -1]
+
+    for i in range(4):
+        X = start[0] + dx[i]
+        Y = start[1] + dy[i]
+        if 0 <= X < M and 0 <= Y < N:
+            if visited[Y][X]:
+                continue
+            if matrix[Y][X] == 2:
+                visited[Y][X] = True
+                DFS(matrix, [X, Y], goal, visited, N, M, cnt + 1)
+                visited[Y][X] = False
+    return
+"""
