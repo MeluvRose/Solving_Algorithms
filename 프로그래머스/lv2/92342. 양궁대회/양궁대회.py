@@ -90,24 +90,22 @@ def solution(n, info):
 
 """
 (itertools)
-from itertools import combinations_with_replacement
-from collections import Counter
+from itertools import product
 def solution(n, info):
-    maxdiff,max_comb=0,{}
-    for combi in combinations_with_replacement(range(11), n):
-        cnt=Counter(combi)
-        score1, score2=0,0
-        for i in range(1, 11):
-            if info[10-i]<cnt[i]: score1+=i
-            elif info[10-i]>0: score2+=i
-        diff=score1-score2
-        if diff>maxdiff:
-            max_comb=cnt
-            maxdiff=diff
-    if maxdiff>0:
-        answer=[0]*11
-        for n in max_comb:
-            answer[10-n]=max_comb[n]
-        return answer
-    else: return [-1]
+    info.reverse()
+    ans = [-1]
+    maxd = 0
+    for wl in product((True, False), repeat=11):
+        t = 0
+        s = sum(info[i]+1 for i in range(11) if wl[i])
+        if s <= n:
+            apeach = sum(i for i in range(11) if not wl[i] and info[i])
+            ryan = sum(i for i in range(11) if wl[i])
+            d = ryan-apeach
+            if d > maxd:
+                maxd = d
+                ans = [info[i]+1 if wl[i] else 0 for i in range(11)]
+                ans[0] += n-s
+    ans.reverse()
+    return ans;
 """
