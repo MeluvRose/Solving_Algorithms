@@ -1,42 +1,3 @@
-# def solution(n, info):
-#     answer = []
-#     board = [0] * 11
-#     score = 0
-    
-#     def solve(n, info, board, )
-#     return answer
-
-"""
-라이언 - 전우승자, 어피치 - 결승전 상대
-운영위원회: "한 선수의 연속 우승보다는 다양한 선수들이
-            우승하길 바래..."
-
-- 규칙
-    1. 어피치가 n발을 쏜 후에 라이언이 n발을 쏜다.
-    2. 점수를 계산
-        - 점수 k는 1 ~ 10점
-        - 동일한 점수 구간에 더 많은 화살을 맞췄을
-        경우에 해당 점수를 획득한다.
-        (단, 적중 횟수에 따른 차등은 X, 해당 점수만을
-        획득)
-        - 모든 과녁 점수를 총합, 최종 점수를 계산
-    3. 더 높은 점수가 더 높은 선수가 우승
-    * 점수 계산 시, 동일한 조건일 경우 상대인 
-    '어피치'에게 점수를 부여
-    우승 판단 또한, 마찬가지 이다.
-    
-- 결론 : 라이언과 어피치가 쏘게 된 화살 개수(n)과
-어피치가 맞힌 과녁의 점수를 10부터 내림차순으로 담은
-정수 배열(info)가 주어질 때, 라이언이 가장 큰 점수차로
-우승하기 위한 과녁의 점수를 내림차순으로 배열에 담아
-반환한다.
-(부가 조건)
-1. 우승할 수 있는 방법이 여러가지일 경우, 가장 낮은 점수를
-더 많이 맞힌 경우의 배열을 반환
-
-2.우승할 수 없는 경우엔 [-1]을 반환
-"""
-
 def solution(n, info):
     answer = []
     board = [0] * 11
@@ -89,3 +50,64 @@ def solution(n, info):
     search(n, info, 0);
     if not answer: return [-1];
     return answer;
+
+"""
+(DFS)
+def solution(n, info):
+    global answer, result
+
+    def score(ryan):
+        s = 0
+        for i in range(11):
+            if ryan[i] == info[i] == 0:
+                continue
+            if ryan[i] > info[i]:
+                s += 10 - i
+            else:
+                s -= 10 - i
+        return s
+
+    def dfs(idx, left, ryan):
+        global answer, result
+        if idx == -1 and left:
+            return
+        if left == 0:
+            s = score(ryan)
+            if result < s:
+                answer = ryan[:]
+                result = s
+            return
+        for i in range(left, -1, -1):
+            ryan[idx] = i
+            dfs(idx-1, left-i, ryan)
+            ryan[idx] = 0
+
+    answer = [0 for _ in range(11)]
+    result = 0
+    dfs(10, n, [0 for _ in range(11)])
+    return answer if result != 0 else [-1]
+"""
+
+"""
+(itertools)
+from itertools import combinations_with_replacement
+from collections import Counter
+def solution(n, info):
+    maxdiff,max_comb=0,{}
+    for combi in combinations_with_replacement(range(11), n):
+        cnt=Counter(combi)
+        score1, score2=0,0
+        for i in range(1, 11):
+            if info[10-i]<cnt[i]: score1+=i
+            elif info[10-i]>0: score2+=i
+        diff=score1-score2
+        if diff>maxdiff:
+            max_comb=cnt
+            maxdiff=diff
+    if maxdiff>0:
+        answer=[0]*11
+        for n in max_comb:
+            answer[10-n]=max_comb[n]
+        return answer
+    else: return [-1]
+"""
