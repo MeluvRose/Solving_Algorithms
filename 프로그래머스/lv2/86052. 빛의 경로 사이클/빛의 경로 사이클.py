@@ -1,11 +1,12 @@
 def solution(grid):
     answer = []
     # 모든 칸에는 4가지 방향의 경로가 존재하고,
-    # 격자는 n 개의 행과 m 개의 열로 이뤄져있다고 하자,
+    # 격자는 n 개의 행과 m 개의 열로 이뤄져있다고 하자
     rows, cols = len(grid), len(grid[0])
     visited = [[[False] * 4 for _ in range(cols)]
               for _ in range(rows)]
-    # D -> L -> U -> R 의 순으로 빛이 이동하는걸 확인,
+    # D -> L -> U -> R 의 순으로 빛이 
+    # 이동하는걸 (예시 그림으로) 확인
     directions = [[1, 0], [0, -1], [-1, 0], [0, 1]]
     
     def move(r, c, i):
