@@ -5,6 +5,7 @@ from collections import Counter
 Counter 생성자는 여러 형태의 데이터를 인자로 받는데요. 먼저 
 중복된 데이터가 저장된 배열을 인자로 넘기면 각 원소가 몇 번씩 
 나오는지가 저장된 객체를 얻게 됩니다.
+most_common()
 """
 
 def solution(orders, course):
@@ -34,38 +35,66 @@ def solution(orders, course):
     return sorted(answer);
 
 """
-def solution(orders, course):
-    answer = []
-    menus = []
-    visited = []
+(DFS, C++)
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+bool cmp(pair<string, int> a, pair<string, int> b){
+    return a.second > b.second;
+}
+
+void DFS(map<string, int>& dic, string& order, string comb, int index, int depth) {
+    if (depth == comb.length()) {
+        dic[comb]++;
+        return;
+    }
+
+    for (int i = index; i < order.length(); i++) {
+        comb[depth] = order[i];
+        DFS(dic, order, comb, i + 1, depth + 1);
+    }
+}
+
+vector<string> solution(vector<string> orders, vector<int> course) {
+    vector<string> answer;
+    map<string, int> dic;
+
+    for (int i = 0; i < orders.size(); i++) {
+        sort(orders[i].begin(), orders[i].end());
+        for (int j = 0; j < course.size(); j++) {
+            string comb = "";
+            comb.resize(course[j]);
+            DFS(dic, orders[i], comb, 0, 0);
+        }
+    }
     
-    def goodCourse(orders, menus, i, strC):
-        lenStrC = len(strC)
-        
-        if lenStrC == course[i]:
-            cntGood = 0
-            for o in orders:
-                cnt = 0
-                # print(strC);
-                for c in strC:
-                    if c in o: cnt += 1
-                if cnt == lenStrC: cntGood += 1;
-            if cntGood >= 2: answer.append(strC);
-            return;
-        for idx, menu in enumerate(menus):
-            strC += menu;
-            goodCourse(orders, menus[idx + 1:], i, strC);
-            strC = strC[:-1];
-        if i < len(course) - 1:
-            goodCourse(orders, menus, i + 1, strC);
+    vector<pair<string, int>> sorted;
+    for (auto& order : dic) 
+        if (order.second > 1)
+            sorted.push_back(make_pair(order.first, order.second));
+    sort(sorted.begin(), sorted.end(), cmp);
     
-    for o in orders:
-        menus += list(o);
-        menus = list(set(menus));
-    menus.sort();
-    # print(menus);
+    for(int i = 0; i < course.size(); i++){
+        int max = 0;
+        for(int j = 0; j < sorted.size(); j++){
+            if (sorted[j].first.length() != course[i]) 
+                continue;
+            else if (max == 0){
+                answer.push_back(sorted[j].first);
+                max = sorted[j].second;
+            }
+            else if (max == sorted[j].second)
+                answer.push_back(sorted[j].first);
+            else
+                break;
+        }
+    }
     
-    goodCourse(orders, menus, 0, "");
-    # print(answer);
+    sort(answer.begin(), answer.end());
     return answer;
+}
 """
