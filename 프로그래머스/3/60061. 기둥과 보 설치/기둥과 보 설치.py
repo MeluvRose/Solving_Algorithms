@@ -7,17 +7,17 @@ def impossible(frame):
     for x, y, a in frame:
         # 기둥일 때,
         if a == 0:
-            if (y != 0 
-                and [x, y - 1, 0] not in frame
-                and [x - 1, y, 1] not in frame
-                and [x, y, 1] not in frame):
+            if (y != 0 # 바닥이 아닌 경우
+                and [x, y - 1, 0] not in frame # 밑 기둥이 없을 경우
+                and [x - 1, y, 1] not in frame # 왼쪽 위의 보가 없을 경우
+                and [x, y, 1] not in frame): # 오른쪽 위의 보가 없을 경우
                 return True;
             continue;
-        if ([x, y - 1, 0] not in frame
-           and [x + 1, y - 1, 0] not in frame
+        if ([x, y - 1, 0] not in frame # 왼쪽 아래 기둥이 없을 경우
+           and [x + 1, y - 1, 0] not in frame # 오른쪽 아래 기둥이 없을 경우
            and not (
                 [x - 1, y, 1] in frame
-                and [x + 1, y, 1] in frame
+                and [x + 1, y, 1] in frame # 연결되는 보라면, 왼쪽 혹은 오른쪽가 없을 경우
            )): return True;
     return False;
 
